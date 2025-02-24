@@ -3,7 +3,7 @@
 $servername = "localhost";
 $username = "root";
 $password = "";
-$database = "mananggit";
+$database = "enrollmentdb";
 
 $conn = new mysqli($servername, $username, $password, $database);
 
