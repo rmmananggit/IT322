@@ -1,6 +1,6 @@
 <?php
-include("../dB/config.php");
 session_start();
+include("../dB/config.php");
 
 if (isset($_POST["registration"])){
     $firstname = $_POST["firstname"];
@@ -12,32 +12,37 @@ if (isset($_POST["registration"])){
     $gender = $_POST["gender"];
     $birthday = $_POST["birthday"];
 
+    // Check if password and confirm password match
     if($password != $cpassword){
-        $_SESSION["message"] = "Password and confirm password does not match";
-        $_SESSION["code"] = "error"; 
+        $_SESSION['message'] = "Password and confirm password do not match";
+        $_SESSION['code'] = "error";
+        header("Location: ../registration.php"); // Redirect to registration page
+        exit(0); // Stop further execution
     }
 
+    // Check if email already exists
     $query = "SELECT * FROM `users` WHERE `email` = '$email'";
     $result = mysqli_query($conn, $query);
 
     if(mysqli_num_rows($result) > 0){
-        $_SESSION["message"] = "Email address already exist";
-        $_SESSION["code"] = "error";
+        $_SESSION['message'] = "Email address already exists";
+        $_SESSION['code'] = "error";
         header("Location: ../registration.php");
-        exit();
+        exit(0);
+
     }
 
-
-
-    $query = "INSERT INTO `users`(`firstName`, `lastName`, `email`, `password`, `phoneNumber`, `gender`, `birthday`) VALUES ('$firstname','$lastname','$email','$password','$phonenumber','$gender','$birthday')";
+    // Insert new user into the database
+    $query = "INSERT INTO `users`(`firstName`, `lastName`, `email`, `password`, `phoneNumber`, `gender`, `birthday`) 
+              VALUES ('$firstname','$lastname','$email','$password','$phonenumber','$gender','$birthday')";
 
     if(mysqli_query($conn, $query)){
-        $_SESSION["message"] = "Registered Successfuly";
-        $_SESSION["code"] = "success";
+        $_SESSION["message"] = "Registered successfully";
+        $_SESSION['code'] = "success";
         header("Location: ../login.php");
-        exit();
+        exit(0);
     }else{
-        echo "Error" , mysqli_error($conn);
+        echo "Error: " . mysqli_error($conn);
     }
     mysqli_close($conn);
 } 

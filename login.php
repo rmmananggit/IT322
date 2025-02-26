@@ -38,6 +38,10 @@
   ======================================================== -->
 </head>
 
+<?php 
+session_start();
+?>
+
 <body>
 
   <main>
@@ -59,7 +63,7 @@
                     <p class="text-center small">Enter your email & password to login</p>
                   </div>
 
-                  <form class="row g-3 needs-validation" action="./controller/registration.php" method="POST" novalidate>
+                  <form class="row g-3 needs-validation" action="./controller/login.php" method="POST" novalidate>
 
                     <div class="col-12">
                       <label for="yourUsername" class="form-label">Email</label>
@@ -82,7 +86,7 @@
                       </div>
                     </div>
                     <div class="col-12">
-                      <button class="btn btn-primary w-100" name="registration" type="submit">Login</button>
+                      <button class="btn btn-primary w-100" name="login" type="submit">Login</button>
                     </div>
                     <div class="col-12">
                       <p class="small mb-0">Don't have account? <a href="./registration.php">Create an account</a></p>
@@ -117,6 +121,34 @@
 
   <!-- Template Main JS File -->
   <script src="assets/js/main.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <?php
+  if(isset($_SESSION['message']) && $_SESSION['code'] !='') {
+      ?>
+      <script>
+        
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+          }
+        });
+        Toast.fire({
+          icon: "<?php echo $_SESSION['code']; ?>",
+          title: "<?php echo $_SESSION['message']; ?>"
+        });
+      </script>
+      <?php
+      unset($_SESSION['message']);
+      unset($_SESSION['code']);
+  }     
+?>
 
 </body>
 
